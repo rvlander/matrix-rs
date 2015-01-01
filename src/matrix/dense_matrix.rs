@@ -44,75 +44,47 @@ impl <T> DenseMatrix<T> {
 		    data: data
 		}
 	}
-	fn element_wise_multiply(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> 
-		where T: Mul<T,T> + Copy{
-		self.element_wise_binary_op(rhs,|(a, b)| *a * *b)
-	}  
 }
 
 impl <T: Add<T, T> + Copy> Add<DenseMatrix<T>, DenseMatrix<T>> for DenseMatrix<T> {
 	fn add(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
-		self.element_wise_binary_op(rhs,|(a, b)| *a + *b)
+		self.__add(rhs)
 	}
 }
 
 impl <T: Add<T, T> + Copy> Add<T, DenseMatrix<T>> for DenseMatrix<T> {
 	fn add(self, rhs: T) -> DenseMatrix<T> {
-		self.element_wise_unary_op(|a| rhs + *a)
+		self.scalar_add(rhs)
 	}
 }
 
-/*impl <T: Add<T, T> + Copy> Add<DenseMatrix<T>, DenseMatrix<T>> for T {
-	fn add(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
-		rhs + self;
-	}
-}*/
-
 impl <T: Sub<T, T> + Copy> Sub<DenseMatrix<T>, DenseMatrix<T>> for DenseMatrix<T> {
 	fn sub(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
-		self.element_wise_binary_op(rhs,|(a, b)| *a - *b)
+		self.__sub(rhs)
 	}
 }
 
 impl <T: Sub<T, T> + Copy> Sub<T, DenseMatrix<T>> for DenseMatrix<T> {
 	fn sub(self, rhs: T) -> DenseMatrix<T> {
-		self.element_wise_unary_op(|a| *a - rhs)
+		self.scalar_sub(rhs)
 	}
 }
 
-/*impl <T: Sub<T, T> + Copy> Sub<DenseMatrix<T>, DenseMatrix<T>> for T {
-	fn sub(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
-		rhs - self;
-	}
-}*/
-	
 impl <T: Mul<T, T> + Copy> Mul<T, DenseMatrix<T>> for DenseMatrix<T> {
 	fn mul(self, rhs: T) -> DenseMatrix<T> {
-		self.element_wise_unary_op(|a| rhs * *a)
+		self.scalar_mul(rhs)
 	}
 }
-
-/*impl <T: Mul<T, T> + Copy> Mul<DenseMatrix<T>, DenseMatrix<T>> for T {
-	fn mul(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
-		rhs * self;
-	}
-}*/
 
 impl <T: Div<T, T> + Copy> Div<T, DenseMatrix<T>> for DenseMatrix<T> {
 	fn div(self, rhs: T) -> DenseMatrix<T> {
-		self.element_wise_unary_op(|a| *a / rhs)
+		self.scalar_div(rhs)
 	}
 }
 
-/*impl <T: Div<T, T> + Copy> Div<DenseMatrix<T>, DenseMatrix<T>> for T {
-	fn div(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
-		rhs * self;
-	}
-}*/
-
 impl <T: Neg<T> + Copy> Neg< DenseMatrix<T>> for DenseMatrix<T> {
 	fn neg(self) -> DenseMatrix<T> {
-		self.element_wise_unary_op(|a| - *a)
+		self.__neg()
 	}
 }
 
@@ -121,6 +93,7 @@ impl <T: Neg<T> + Copy> Neg< DenseMatrix<T>> for DenseMatrix<T> {
 
 #[cfg(test)]
 mod test {
+	use super::super::matrix::Matrix;
 	use super::DenseMatrix;
 
 	#[test]
