@@ -2,12 +2,36 @@
 
 
 use std::iter::repeat;
+use super::matrix::Matrix;
 
 #[deriving(PartialEq, Eq, Show)]
 pub struct DenseMatrix<T> {
 	m: uint,
 	n: uint,
 	data: Vec<T>
+}
+
+impl <T> Matrix<T>  for DenseMatrix<T> {
+	// dont forget to return U
+	fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self, rhs: DenseMatrix<T>,f : F) -> DenseMatrix<T> {
+		assert_eq!(self.m, rhs.m);
+		assert_eq!(self.n, rhs.n);
+		DenseMatrix {
+			m: self.m,
+			n: self.n,
+			data: self.data.iter().zip(rhs.data.iter()).map(f).collect()
+		}
+	}
+
+	// dont forget to return U
+	fn element_wise_unary_op<F: Fn(&T) -> T>(self, f: F) -> DenseMatrix<T> {
+		DenseMatrix {
+			m: self.m,
+			n: self.n,
+			data: self.data.iter().map(f).collect()
+		}
+	}
+
 }
 
 impl <T> DenseMatrix<T> {
@@ -20,29 +44,8 @@ impl <T> DenseMatrix<T> {
 		    data: data
 		}
 	}
-
-	fn element_wise_binary_op<U, F: Fn((&T, &T)) -> U>(self, rhs: DenseMatrix<T>,f : F) -> DenseMatrix<U> {
-		assert_eq!(self.m, rhs.m);
-		assert_eq!(self.n, rhs.n);
-		DenseMatrix {
-			m: self.m,
-			n: self.n,
-			data: self.data.iter().zip(rhs.data.iter()).map(f).collect()
-		}
-	}
-
-	fn element_wise_unary_op<U, F: Fn(&T) -> U>(self, f: F) -> DenseMatrix<U> {
-		DenseMatrix {
-			m: self.m,
-			n: self.n,
-			data: self.data.iter().map(f).collect()
-		}
-	}
-
-}
-
-impl <T: Mul<T,T> + Copy> DenseMatrix<T> {
-	fn element_wise_multiply(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
+	fn element_wise_multiply(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> 
+		where T: Mul<T,T> + Copy{
 		self.element_wise_binary_op(rhs,|(a, b)| *a * *b)
 	}  
 }
