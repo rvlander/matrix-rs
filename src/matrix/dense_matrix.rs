@@ -5,7 +5,7 @@ use std::iter::repeat;
 use super::matrix::Matrix;
 
 #[deriving(PartialEq, Eq, Show)]
-pub struct DenseMatrix<T> {
+struct DenseMatrix<T> {
 	m: uint,
 	n: uint,
 	data: Vec<T>
@@ -16,33 +16,33 @@ impl <T> Matrix<T>  for DenseMatrix<T> {
 	fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self, rhs: DenseMatrix<T>,f : F) -> DenseMatrix<T> {
 		assert_eq!(self.m, rhs.m);
 		assert_eq!(self.n, rhs.n);
-		DenseMatrix {
-			m: self.m,
-			n: self.n,
-			data: self.data.iter().zip(rhs.data.iter()).map(f).collect()
-		}
+		let data = self.data.iter().zip(rhs.data.iter()).map(f).collect();
+		DenseMatrix::new(self.m, self.n, data)	
 	}
 
 	// dont forget to return U
 	fn element_wise_unary_op<F: Fn(&T) -> T>(self, f: F) -> DenseMatrix<T> {
-		DenseMatrix {
-			m: self.m,
-			n: self.n,
-			data: self.data.iter().map(f).collect()
-		}
+		let data = self.data.iter().map(f).collect();
+		DenseMatrix::new(self.m, self.n, data)
 	}
 
 }
 
 impl <T> DenseMatrix<T> {
+	fn new(m: uint, n: uint, data: Vec<T>) -> DenseMatrix<T> {
+		let matrix = DenseMatrix {
+			m: m,
+			n: n,
+			data: data
+		};
+		assert_eq!(matrix.m * matrix.n, matrix.data.len());
+		matrix
+	}
+
 	fn from_elem(m: uint, n: uint, init: T) -> DenseMatrix<T>
 	        where T: Clone {
 		let data = repeat(init).take(n*m).collect();
-		DenseMatrix {
-		    m: m, 
-		    n: n, 
-		    data: data
-		}
+		DenseMatrix::new(m, n, data)
 	}
 }
 
