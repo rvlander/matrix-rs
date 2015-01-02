@@ -1,5 +1,7 @@
 [package]
-
 name = "matrix-rs"
 version = "0.0.1"
 authors = ["Gaetan André <rvlander@gaetanandre.eu>"]
+
+[dependencies]
+num = "*"
