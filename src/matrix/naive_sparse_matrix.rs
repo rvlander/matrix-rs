@@ -3,7 +3,7 @@ use num::traits::Zero;
 use std::collections::HashMap;
 use std::mem::replace;
 
-#[deriving(PartialEq, Eq, Show)]
+#[derive(PartialEq, Eq, Show)]
 struct NaiveSparseMatrix<T> {
 	m: uint,
 	n: uint,
@@ -11,6 +11,9 @@ struct NaiveSparseMatrix<T> {
 }
 
 impl <T> Matrix<T>  for NaiveSparseMatrix<T> {
+
+
+
 	// dont forget to return U
 	fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self, rhs: NaiveSparseMatrix<T>,f : F) -> NaiveSparseMatrix<T> where T: Zero{
 		assert_eq!(self.m, rhs.m);
@@ -31,6 +34,10 @@ impl <T> Matrix<T>  for NaiveSparseMatrix<T> {
 			//TODO
 			NaiveSparseMatrix::new(self.m, self.n, HashMap::new())
 		}
+	}
+
+	fn size(&self) -> (uint, uint) {
+		return (self.m, self.n)
 	}
 }
 

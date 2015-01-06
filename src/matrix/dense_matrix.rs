@@ -1,10 +1,12 @@
-#![allow(dead_code)]
-
-
 use std::iter::repeat;
 use super::matrix::Matrix;
+use std::ops::Add;
+use std::ops::Neg;
+use std::ops::Div;
+use std::ops::Mul;
+use std::ops::Sub;
 
-#[deriving(PartialEq, Eq, Show)]
+#[derive(PartialEq, Eq, Show)]
 struct DenseMatrix<T> {
 	m: uint,
 	n: uint,
@@ -12,6 +14,7 @@ struct DenseMatrix<T> {
 }
 
 impl <T> Matrix<T>  for DenseMatrix<T> {
+
 	// dont forget to return U
 	fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self, rhs: DenseMatrix<T>,f : F) -> DenseMatrix<T> {
 		assert_eq!(self.m, rhs.m);
@@ -25,6 +28,11 @@ impl <T> Matrix<T>  for DenseMatrix<T> {
 		let data = self.data.iter().map(f).collect();
 		DenseMatrix::new(self.m, self.n, data)
 	}
+
+	fn size(&self) -> (uint, uint) {
+		return (self.m, self.n)
+	}
+
 
 }
 
@@ -46,43 +54,57 @@ impl <T> DenseMatrix<T> {
 	}
 }
 
-impl <T: Add<T, T> + Copy> Add<DenseMatrix<T>, DenseMatrix<T>> for DenseMatrix<T> {
+impl <T: Add<T, Output = T> + Copy> Add for DenseMatrix<T> {
+	type Output = DenseMatrix<T>;
+
 	fn add(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
 		self.__add(rhs)
 	}
 }
 
-impl <T: Add<T, T> + Copy> Add<T, DenseMatrix<T>> for DenseMatrix<T> {
+impl <T: Add<T, Output = T> + Copy> Add<T> for DenseMatrix<T> {
+	type Output = DenseMatrix<T>;
+
 	fn add(self, rhs: T) -> DenseMatrix<T> {
 		self.scalar_add(rhs)
 	}
 }
 
-impl <T: Sub<T, T> + Copy> Sub<DenseMatrix<T>, DenseMatrix<T>> for DenseMatrix<T> {
+impl <T: Sub<T, Output = T> + Copy> Sub for DenseMatrix<T> {
+	type Output = DenseMatrix<T>;
+
 	fn sub(self, rhs: DenseMatrix<T>) -> DenseMatrix<T> {
 		self.__sub(rhs)
 	}
 }
 
-impl <T: Sub<T, T> + Copy> Sub<T, DenseMatrix<T>> for DenseMatrix<T> {
+impl <T: Sub<T, Output = T> + Copy> Sub<T> for DenseMatrix<T> {
+	type Output = DenseMatrix<T>;
+
 	fn sub(self, rhs: T) -> DenseMatrix<T> {
 		self.scalar_sub(rhs)
 	}
 }
 
-impl <T: Mul<T, T> + Copy> Mul<T, DenseMatrix<T>> for DenseMatrix<T> {
+impl <T: Mul<T, Output = T> + Copy> Mul<T> for DenseMatrix<T> {
+	type Output = DenseMatrix<T>;
+
 	fn mul(self, rhs: T) -> DenseMatrix<T> {
 		self.scalar_mul(rhs)
 	}
 }
 
-impl <T: Div<T, T> + Copy> Div<T, DenseMatrix<T>> for DenseMatrix<T> {
-	fn div(self, rhs: T) -> DenseMatrix<T> {
+impl <T: Div<T, Output = T> + Copy> Div<T> for DenseMatrix<T> {
+	type Output = DenseMatrix<T>;
+
+	fn div(self, rhs: T) -> DenseMatrix<T> {	
 		self.scalar_div(rhs)
 	}
 }
 
-impl <T: Neg<T> + Copy> Neg< DenseMatrix<T>> for DenseMatrix<T> {
+impl <T: Neg<Output = T> + Copy> Neg for DenseMatrix<T> {
+	type Output = DenseMatrix<T>;
+
 	fn neg(self) -> DenseMatrix<T> {
 		self.__neg()
 	}
