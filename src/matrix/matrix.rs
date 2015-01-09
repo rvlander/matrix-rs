@@ -11,7 +11,7 @@ pub trait Matrix<T> :Sized{
 	// dont forget to return U
 	fn element_wise_unary_op<F: Fn(&T) -> T>(self, f: F) -> Self;
 
-	fn size(&self) -> (uint, uint);
+	fn size(&self) -> (usize, usize);
 
 	fn __add(self, rhs: Self) -> Self where T: Add<T, Output = T> + Copy {
 		self.element_wise_binary_op(rhs,|(a, b)| *a + *b)
@@ -49,11 +49,11 @@ pub trait Matrix<T> :Sized{
 
 #[derive(Copy)]
 pub struct IndicesIter {
-	m: uint,
-	n: uint
+	m: usize,
+	n: usize
 }
 
-/*impl Iterator<(uint, uint)> for IndicesIter {
+/*impl Iterator<(usize, usize)> for IndicesIter {
 	fn next(&mut self) -> Option<A> {
 
 	}

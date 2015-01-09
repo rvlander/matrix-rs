@@ -8,8 +8,8 @@ use std::ops::Sub;
 
 #[derive(PartialEq, Eq, Show)]
 struct DenseMatrix<T> {
-	m: uint,
-	n: uint,
+	m: usize,
+	n: usize,
 	data: Vec<T>
 }
 
@@ -29,7 +29,7 @@ impl <T> Matrix<T>  for DenseMatrix<T> {
 		DenseMatrix::new(self.m, self.n, data)
 	}
 
-	fn size(&self) -> (uint, uint) {
+	fn size(&self) -> (usize, usize) {
 		return (self.m, self.n)
 	}
 
@@ -37,7 +37,7 @@ impl <T> Matrix<T>  for DenseMatrix<T> {
 }
 
 impl <T> DenseMatrix<T> {
-	fn new(m: uint, n: uint, data: Vec<T>) -> DenseMatrix<T> {
+	fn new(m: usize, n: usize, data: Vec<T>) -> DenseMatrix<T> {
 		let matrix = DenseMatrix {
 			m: m,
 			n: n,
@@ -47,7 +47,7 @@ impl <T> DenseMatrix<T> {
 		matrix
 	}
 
-	fn from_elem(m: uint, n: uint, init: T) -> DenseMatrix<T>
+	fn from_elem(m: usize, n: usize, init: T) -> DenseMatrix<T>
 	        where T: Clone {
 		let data = repeat(init).take(n*m).collect();
 		DenseMatrix::new(m, n, data)

@@ -5,9 +5,9 @@ use std::mem::replace;
 
 #[derive(PartialEq, Eq, Show)]
 struct NaiveSparseMatrix<T> {
-	m: uint,
-	n: uint,
-	values: HashMap<(uint,uint),T>
+	m: usize,
+	n: usize,
+	values: HashMap<(usize,usize),T>
 }
 
 impl <T> Matrix<T>  for NaiveSparseMatrix<T> {
@@ -36,13 +36,13 @@ impl <T> Matrix<T>  for NaiveSparseMatrix<T> {
 		}
 	}
 
-	fn size(&self) -> (uint, uint) {
+	fn size(&self) -> (usize, usize) {
 		return (self.m, self.n)
 	}
 }
 
 impl <T> NaiveSparseMatrix<T> {
-	fn new(m: uint, n: uint, values: HashMap<(uint,uint),T>) -> NaiveSparseMatrix<T> where T: Zero{
+	fn new(m: usize, n: usize, values: HashMap<(usize,usize),T>) -> NaiveSparseMatrix<T> where T: Zero{
 		let mut matrix = NaiveSparseMatrix {
 			m: m,
 			n: n,
