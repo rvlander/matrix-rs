@@ -3,6 +3,7 @@ use std::ops::Neg;
 use std::ops::Div;
 use std::ops::Mul;
 use std::ops::Sub;
+use std::iter::Range;
 
 pub trait Matrix<T> :Sized{
 
@@ -45,17 +46,43 @@ pub trait Matrix<T> :Sized{
 	fn __neg(self) -> Self where T: Neg<Output = T> + Copy {
 		self.element_wise_unary_op(|a| - *a)
 	}
+
+	fn iter(&self)-> IndicesIter {
+		let (m,n) = self.size();
+		return IndicesIter {
+			m: m,
+			n: n,
+			colIter: range(0, n),
+			rowIter: range(1, m),
+			row: Some(0)
+		}
+	}
 }
 
 #[derive(Copy)]
 pub struct IndicesIter {
 	m: usize,
-	n: usize
+	n: usize,
+	colIter: Range<usize>,
+	rowIter: Range<usize>,
+	row: Option<usize>,
 }
 
-/*impl Iterator<(usize, usize)> for IndicesIter {
-	fn next(&mut self) -> Option<A> {
+impl Iterator for IndicesIter {
+	type Item = (usize, usize);
 
+	fn next(&mut self) -> Option<(usize, usize)> {
+		match self.row {
+			Some(a) => match self.colIter.next() {
+				Some(b) => Some((a,b)),
+				None => {
+					self.colIter = range(0, self.n);
+					self.row = self.rowIter.next();
+					self.next()
+				},
+			},
+			None => None,
+		}
 	}
-}*/
+}
 

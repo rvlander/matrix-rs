@@ -120,66 +120,66 @@ mod test {
 
 	#[test]
 	fn test_from_elem () {
-		let m1 = DenseMatrix::from_elem(10,10,10i);
-		let m2 = DenseMatrix::from_elem(10,10,10i);
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let m2 = DenseMatrix::from_elem(10,10,10);
 		assert_eq!(m1, m2);
 
-		let m1 = DenseMatrix::from_elem(10,20,10i);
-		let m2 = DenseMatrix::from_elem(10,10,10i);
+		let m1 = DenseMatrix::from_elem(10,20,10);
+		let m2 = DenseMatrix::from_elem(10,10,10);
 		assert!(m1 != m2);
 	}
 
 	#[test]
 	fn test_add (){
-		let m1 = DenseMatrix::from_elem(10,10,10i);
-		let m2 = DenseMatrix::from_elem(10,10,10i);
-		let m3 = DenseMatrix::from_elem(10,10,10i);
-		let m4 = DenseMatrix::from_elem(10,10,30i);
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let m2 = DenseMatrix::from_elem(10,10,10);
+		let m3 = DenseMatrix::from_elem(10,10,10);
+		let m4 = DenseMatrix::from_elem(10,10,30);
 		assert_eq!(m1+m2+m3, m4);
 	}
 
 	#[test]
 	fn test_add_scalar (){
-		let m1 = DenseMatrix::from_elem(10,10,10i);
-		let m2 = DenseMatrix::from_elem(10,10,14i);
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let m2 = DenseMatrix::from_elem(10,10,14);
 		assert_eq!(m1+4, m2);
 	}
 
 	#[test]
 	fn test_sub (){
-		let m1 = DenseMatrix::from_elem(10,10,10i);
-		let m2 = DenseMatrix::from_elem(10,10,10i);
-		let m3 = DenseMatrix::from_elem(10,10,10i);
-		let m4 = DenseMatrix::from_elem(10,10,-10i);
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let m2 = DenseMatrix::from_elem(10,10,10);
+		let m3 = DenseMatrix::from_elem(10,10,10);
+		let m4 = DenseMatrix::from_elem(10,10,-10);
 		assert_eq!(m1-m2-m3, m4);
 	}
 
 	#[test]
 	fn test_sub_scalar (){
-		let m1 = DenseMatrix::from_elem(10,10,10i);
-		let m2 = DenseMatrix::from_elem(10,10,6i);
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let m2 = DenseMatrix::from_elem(10,10,6);
 		assert_eq!(m1-4, m2);
 	}
 
 	#[test]
 	fn test_mul_scalar (){
-		let m1 = DenseMatrix::from_elem(10,10,10i);
-		let m4 = DenseMatrix::from_elem(10,10,60i);
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let m4 = DenseMatrix::from_elem(10,10,60);
 		assert_eq!(m1*6, m4);
 	}
 
 	#[test]
 	fn test_element_wise_mul (){
-		let m1 = DenseMatrix::from_elem(10,10,10i);
-		let m2 = DenseMatrix::from_elem(10,10,20i);
-		let m4 = DenseMatrix::from_elem(10,10,200i);
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let m2 = DenseMatrix::from_elem(10,10,20);
+		let m4 = DenseMatrix::from_elem(10,10,200);
 		assert_eq!(m1.element_wise_multiply(m2), m4);
 	}
 
 	#[test]
 	fn test_neg (){
-		let m1 = DenseMatrix::from_elem(10,10,10i);
-		let m2 = DenseMatrix::from_elem(10,10,-10i);
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let m2 = DenseMatrix::from_elem(10,10,-10);
 		assert_eq!(-m1, m2);
 	}
 
@@ -188,5 +188,23 @@ mod test {
 		let m1 = DenseMatrix::from_elem(10,10,8f64);
 		let m2 = DenseMatrix::from_elem(10,10,2f64);
 		assert_eq!(m1/4.0, m2);
+	}
+
+	#[test]
+	fn test_iter () {
+		let m1 = DenseMatrix::from_elem(10,10,10);
+		let (m,n) = m1.size();
+		let mut iter = m1.iter();
+		for i in range(0,m) {
+			for j in range(0,n) {
+				let a = iter.next();
+				match a {
+					Some((u,v)) => println!("{} {}", u, v),
+					_ => println!("None"),
+				}	
+				assert_eq!(Some((i,j)), a);
+			}
+		}
+		assert_eq!(None, iter.next())
 	}
 }
