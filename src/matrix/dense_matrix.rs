@@ -7,7 +7,7 @@ use std::ops::Mul;
 use std::ops::Sub;
 
 #[derive(PartialEq, Eq, Show)]
-struct DenseMatrix<T> {
+pub struct DenseMatrix<T> {
 	m: usize,
 	n: usize,
 	data: Vec<T>
@@ -33,11 +33,10 @@ impl <T> Matrix<T>  for DenseMatrix<T> {
 		return (self.m, self.n)
 	}
 
-
 }
 
 impl <T> DenseMatrix<T> {
-	fn new(m: usize, n: usize, data: Vec<T>) -> DenseMatrix<T> {
+	pub fn new(m: usize, n: usize, data: Vec<T>) -> DenseMatrix<T> {
 		let matrix = DenseMatrix {
 			m: m,
 			n: n,
@@ -47,7 +46,7 @@ impl <T> DenseMatrix<T> {
 		matrix
 	}
 
-	fn from_elem(m: usize, n: usize, init: T) -> DenseMatrix<T>
+	pub fn from_elem(m: usize, n: usize, init: T) -> DenseMatrix<T>
 	        where T: Clone {
 		let data = repeat(init).take(n*m).collect();
 		DenseMatrix::new(m, n, data)
@@ -191,12 +190,12 @@ mod test {
 	}
 
 	#[test]
-	fn test_iter () {
+	fn test_indices_iter () {
 		let m1 = DenseMatrix::from_elem(10,10,10);
 		let (m,n) = m1.size();
-		let mut iter = m1.iter();
-		for i in range(0,m) {
-			for j in range(0,n) {
+		let mut iter = m1.indices_iter();
+		for i in (0..m) {
+			for j in (0..n) {
 				let a = iter.next();
 				match a {
 					Some((u,v)) => println!("{} {}", u, v),
@@ -205,6 +204,7 @@ mod test {
 				assert_eq!(Some((i,j)), a);
 			}
 		}
+		
 		assert_eq!(None, iter.next())
 	}
 }
