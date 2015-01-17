@@ -10,12 +10,12 @@ struct NaiveSparseMatrix<T> {
 	values: HashMap<(usize,usize),T>
 }
 
-impl <T> Matrix<T>  for NaiveSparseMatrix<T> {
+impl <T> Matrix<T>  for NaiveSparseMatrix<T> where T: Zero + PartialEq{
 
 
 
 	// dont forget to return U
-	fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self, rhs: NaiveSparseMatrix<T>,f : F) -> NaiveSparseMatrix<T> where T: Zero{
+	fn element_wise_binary_op<F: Fn((&Ts, &T)) -> T>(self, rhs: NaiveSparseMatrix<T>,f : F) -> NaiveSparseMatrix<T> {
 		assert_eq!(self.m, rhs.m);
 		assert_eq!(self.n, rhs.n);
 		//let data = self.data.iter().zip(rhs.data.iter()).map(f).collect();
@@ -23,7 +23,7 @@ impl <T> Matrix<T>  for NaiveSparseMatrix<T> {
 	}
 
 	// dont forget to return U
-	fn element_wise_unary_op<F: Fn(&T) -> T>(self, f: F) -> NaiveSparseMatrix<T> where T: Zero + PartialEq {
+	fn element_wise_unary_op<F: Fn(&T) -> T>(self, f: F) -> NaiveSparseMatrix<T> {
 		//let data = self.data.iter().map(f).collect();
 		let zero: T = Zero::zero();
 		let f0 = f(&zero);
@@ -35,7 +35,7 @@ impl <T> Matrix<T>  for NaiveSparseMatrix<T> {
 			NaiveSparseMatrix::new(self.m, self.n, HashMap::new())
 		}
 	}
-
+	
 	fn size(&self) -> (usize, usize) {
 		return (self.m, self.n)
 	}
