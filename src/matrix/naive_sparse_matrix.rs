@@ -15,7 +15,7 @@ impl <T> Matrix<T>  for NaiveSparseMatrix<T> where T: Zero + PartialEq{
 
 
 	// dont forget to return U
-	fn element_wise_binary_op<F: Fn((&Ts, &T)) -> T>(self, rhs: NaiveSparseMatrix<T>,f : F) -> NaiveSparseMatrix<T> {
+	fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self, rhs: NaiveSparseMatrix<T>,f : F) -> NaiveSparseMatrix<T> {
 		assert_eq!(self.m, rhs.m);
 		assert_eq!(self.n, rhs.n);
 		//let data = self.data.iter().zip(rhs.data.iter()).map(f).collect();
