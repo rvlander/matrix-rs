@@ -23,8 +23,18 @@ impl <T> Matrix<T>  for NaiveSparseMatrix<T> where T: Zero + PartialEq + Copy{
 	fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self, rhs: NaiveSparseMatrix<T>,f : F) -> NaiveSparseMatrix<T> {
 		assert_eq!(self.m, rhs.m);
 		assert_eq!(self.n, rhs.n);
-		//self.values.iter().map(|a| match rhs.values.get(a.1))
-		NaiveSparseMatrix::new(self.m, self.n, HashMap::new())	
+		
+		let zero: T = Zero::zero();
+
+		let mut remaining = rhs.values;
+		let mut tmp: HashMap<(usize,usize),T> = self.values.iter().map(|a| (*a.0, match remaining.remove(a.0){
+			Some(b) => f((a.1,&b)),
+			None => f((a.1,&zero)),
+		})).collect();
+		for (indices, val) in remaining.iter() {
+			tmp.insert(*indices, f((&zero, val)));
+		} 
+		NaiveSparseMatrix::new(self.m, self.n, tmp)	
 	}
 
 	// dont forget to return U
@@ -129,14 +139,28 @@ mod test {
 	use super::NaiveSparseMatrix;
 	use std::collections::HashMap;
 
-	/*#[test]
+	#[test]
 	fn test_add (){
-		let m1 = DenseMatrix::from_elem(10,10,10);
-		let m2 = DenseMatrix::from_elem(10,10,10);
-		let m3 = DenseMatrix::from_elem(10,10,10);
-		let m4 = DenseMatrix::from_elem(10,10,30);
-		assert_eq!(m1+m2+m3, m4);
-	}*/
+		let mut hm1 = HashMap::new();
+		hm1.insert((1,2), 10);
+		hm1.insert((2,1), 5);
+		hm1.insert((0,0), 7);
+
+		let mut hm2 = HashMap::new();
+		hm2.insert((0,0), 14);
+		hm2.insert((2,2), 20);
+
+		let mut hm3 = HashMap::new();
+		hm3.insert((0,0), 21);
+		hm3.insert((1,2), 10);
+		hm3.insert((2,1), 5);
+		hm3.insert((2,2), 20);
+	
+		let m1 = NaiveSparseMatrix::new(3, 3, hm1);
+		let m2 = NaiveSparseMatrix::new(3, 3, hm2);
+		let m3 = NaiveSparseMatrix::new(3, 3, hm3);
+		assert_eq!(m1+m2, m3);
+	}
 
 	#[test]
 	fn test_add_scalar (){
@@ -162,14 +186,28 @@ mod test {
 		assert_eq!(m1+6, m4);
 	}
 
-	/*#[test]
+	#[test]
 	fn test_sub (){
-		let m1 = DenseMatrix::from_elem(10,10,10);
-		let m2 = DenseMatrix::from_elem(10,10,10);
-		let m3 = DenseMatrix::from_elem(10,10,10);
-		let m4 = DenseMatrix::from_elem(10,10,-10);
-		assert_eq!(m1-m2-m3, m4);
-	}*/
+		let mut hm1 = HashMap::new();
+		hm1.insert((1,2), 10);
+		hm1.insert((2,1), 5);
+		hm1.insert((0,0), 7);
+
+		let mut hm2 = HashMap::new();
+		hm2.insert((0,0), 14);
+		hm2.insert((2,2), 20);
+
+		let mut hm3 = HashMap::new();
+		hm3.insert((0,0), -7);
+		hm3.insert((1,2), 10);
+		hm3.insert((2,1), 5);
+		hm3.insert((2,2), -20);
+	
+		let m1 = NaiveSparseMatrix::new(3, 3, hm1);
+		let m2 = NaiveSparseMatrix::new(3, 3, hm2);
+		let m3 = NaiveSparseMatrix::new(3, 3, hm3);
+		assert_eq!(m1-m2, m3);
+	}
 
 	#[test]
 	fn test_sub_scalar (){
@@ -188,7 +226,6 @@ mod test {
 		hm2.insert((2,0), -12);
 		hm2.insert((2,1), -7);
 		hm2.insert((2,2), -12);
-
 		
 		let m1 = NaiveSparseMatrix::new(3, 3, hm1);
 		let m4 = NaiveSparseMatrix::new(3, 3, hm2);
@@ -206,21 +243,31 @@ mod test {
 		hm2.insert((0,0), 14);
 		hm2.insert((1,2), 20);
 		hm2.insert((2,1), 10);
-
-
 		
 		let m1 = NaiveSparseMatrix::new(3, 3, hm1);
 		let m4 = NaiveSparseMatrix::new(3, 3, hm2);
 		assert_eq!(m1*2, m4);
 	}
 
-	/*#[test]
+	#[test]
 	fn test_element_wise_mul (){
-		let m1 = DenseMatrix::from_elem(10,10,10);
-		let m2 = DenseMatrix::from_elem(10,10,20);
-		let m4 = DenseMatrix::from_elem(10,10,200);
-		assert_eq!(m1.element_wise_multiply(m2), m4);
-	}*/
+		let mut hm1 = HashMap::new();
+		hm1.insert((1,2), 10);
+		hm1.insert((2,1), 5);
+		hm1.insert((0,0), 7);
+
+		let mut hm2 = HashMap::new();
+		hm2.insert((0,0), 2);
+		hm2.insert((2,2), 20);
+
+		let mut hm3 = HashMap::new();
+		hm3.insert((0,0), 14);
+	
+		let m1 = NaiveSparseMatrix::new(3, 3, hm1);
+		let m2 = NaiveSparseMatrix::new(3, 3, hm2);
+		let m3 = NaiveSparseMatrix::new(3, 3, hm3);
+		assert_eq!(m1.element_wise_multiply(m2), m3);
+	}
 
 	#[test]
 	fn test_neg (){
