@@ -58,7 +58,6 @@ pub trait Matrix<T> :Sized{
 	}
 }
 
-#[derive(Copy)]
 pub struct IndicesIter {
 	n: usize,
 	col_iter: Range<usize>,

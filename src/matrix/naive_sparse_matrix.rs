@@ -8,7 +8,7 @@ use std::ops::Div;
 use std::ops::Mul;
 use std::ops::Sub;
 
-#[derive(PartialEq, Eq, Show)]
+#[derive(PartialEq, Eq, Debug)]
 struct NaiveSparseMatrix<T> {
 	m: usize,
 	n: usize,

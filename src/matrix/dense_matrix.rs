@@ -6,7 +6,7 @@ use std::ops::Div;
 use std::ops::Mul;
 use std::ops::Sub;
 
-#[derive(PartialEq, Eq, Show)]
+#[derive(PartialEq, Eq, Debug)]
 pub struct DenseMatrix<T> {
 	m: usize,
 	n: usize,
