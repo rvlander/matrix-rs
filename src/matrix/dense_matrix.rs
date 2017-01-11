@@ -5,6 +5,8 @@ use std::ops::Neg;
 use std::ops::Div;
 use std::ops::Mul;
 use std::ops::Sub;
+use num::traits::Float;
+use num::traits::Zero;
 
 #[derive(PartialEq, Eq, Debug)]
 pub struct DenseMatrix<T> {
@@ -45,6 +47,17 @@ impl<T: Clone> Matrix<T> for DenseMatrix<T> {
             }
         }
         DenseMatrix::new(self.m, self.n, data)
+    }
+
+    fn norm(self) -> T
+        where T: Float
+    {
+        // let to_sum = self.element_wise_unary_op(|&a| a * a);
+        let mut sum: T = Zero::zero();
+        for a in self.data.iter() {
+            sum = *a * *a + sum
+        }
+        return sum.sqrt();
     }
 }
 
@@ -230,5 +243,12 @@ mod test {
         let m3 = DenseMatrix::new(3, 3, vec![1, 3, 5, 5, 7, 9, 9, 11, 13]);
 
         assert_eq!(m2, m3)
+    }
+
+    #[test]
+    fn test_norm() {
+        let m1 = DenseMatrix::new(3, 3, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]);
+
+        assert_eq!(m1.norm(), 16.881943016134134)
     }
 }

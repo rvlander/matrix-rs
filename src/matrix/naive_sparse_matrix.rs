@@ -7,6 +7,7 @@ use std::ops::Neg;
 use std::ops::Div;
 use std::ops::Mul;
 use std::ops::Sub;
+use num::traits::Float;
 
 #[derive(PartialEq, Eq, Debug)]
 struct NaiveSparseMatrix<T> {
@@ -71,6 +72,15 @@ impl<T> Matrix<T> for NaiveSparseMatrix<T>
     fn size(&self) -> (usize, usize) {
         return (self.m, self.n);
     }
+
+    #[allow(unused_variables)]
+    fn norm(self) -> T
+        where T: Float
+    {
+        println!("Not implemented yet");
+        panic!();
+    }
+
 
     #[allow(unused_variables)]
     fn map<F>(self, f: F) -> Self

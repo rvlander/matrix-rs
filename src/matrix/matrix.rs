@@ -4,6 +4,7 @@ use std::ops::Div;
 use std::ops::Mul;
 use std::ops::Sub;
 use std::ops::Range;
+use num::traits::Float;
 
 pub trait Matrix<T>: Sized {
     fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self, rhs: Self, f: F) -> Self;
@@ -14,6 +15,8 @@ pub trait Matrix<T>: Sized {
     fn map<F>(self, f: F) -> Self where F: Fn(&T, usize, usize) -> T;
 
     fn size(&self) -> (usize, usize);
+
+    fn norm(self) -> T where T: Float;
 
     fn __add(self, rhs: Self) -> Self
         where T: Add<T, Output = T> + Copy
