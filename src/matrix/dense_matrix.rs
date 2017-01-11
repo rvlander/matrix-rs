@@ -13,7 +13,7 @@ pub struct DenseMatrix<T> {
     data: Vec<T>,
 }
 
-impl<T> Matrix<T> for DenseMatrix<T> {
+impl<T: Clone> Matrix<T> for DenseMatrix<T> {
     // dont forget to return U
     fn element_wise_binary_op<F: Fn((&T, &T)) -> T>(self,
                                                     rhs: DenseMatrix<T>,
@@ -33,6 +33,18 @@ impl<T> Matrix<T> for DenseMatrix<T> {
 
     fn size(&self) -> (usize, usize) {
         return (self.m, self.n);
+    }
+
+    fn map<F>(self, f: F) -> Self
+        where F: Fn(&T, usize, usize) -> T
+    {
+        let mut data = self.data.clone();
+        for i in 0..self.m {
+            for j in 0..self.n {
+                data[i * self.n + j] = f(&data[i * self.n + j], i, j);
+            }
+        }
+        DenseMatrix::new(self.m, self.n, data)
     }
 }
 
@@ -208,5 +220,15 @@ mod test {
         }
 
         assert_eq!(None, iter.next())
+    }
+
+    #[test]
+    fn test_map() {
+        let m1 = DenseMatrix::new(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        let m2 = m1.map(|&t, i, j| t + i + j);
+
+        let m3 = DenseMatrix::new(3, 3, vec![1, 3, 5, 5, 7, 9, 9, 11, 13]);
+
+        assert_eq!(m2, m3)
     }
 }

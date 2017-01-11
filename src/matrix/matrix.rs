@@ -11,6 +11,8 @@ pub trait Matrix<T>: Sized {
     // dont forget to return U
     fn element_wise_unary_op<F: Fn(&T) -> T>(self, f: F) -> Self;
 
+    fn map<F>(self, f: F) -> Self where F: Fn(&T, usize, usize) -> T;
+
     fn size(&self) -> (usize, usize);
 
     fn __add(self, rhs: Self) -> Self

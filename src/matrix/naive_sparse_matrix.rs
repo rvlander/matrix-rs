@@ -71,6 +71,14 @@ impl<T> Matrix<T> for NaiveSparseMatrix<T>
     fn size(&self) -> (usize, usize) {
         return (self.m, self.n);
     }
+
+    #[allow(unused_variables)]
+    fn map<F>(self, f: F) -> Self
+        where F: Fn(&T, usize, usize) -> T
+    {
+        println!("Not implemented yet");
+        panic!();
+    }
 }
 
 impl<T> NaiveSparseMatrix<T> {

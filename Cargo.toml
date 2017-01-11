@@ -1,5 +1,5 @@
 [package]
-name = "matrix-rs"
+name = "matrix"
 version = "0.0.1"
 authors = ["Gaetan André <rvlander@gaetanandre.eu>"]
 
